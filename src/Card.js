@@ -32,12 +32,12 @@ const NOUN = [
 
 const EMPTY_STORY_LIST_TEXT = {
   'en': 'You are the first one. Why are you here?',
-  'de': 'Sie sind der erste. Warum sind Sie hier?'
+  'de': 'Du bist der erste. Warum bist du hier?'
 };
 
 const PLACEHOLDER = {
   'en': 'Write my story…',
-  'de': 'Meine Story schreiben…'
+  'de': 'Meine Kurzgeschichte schreiben…'
 };
 
 const selectName = () => {
@@ -61,7 +61,7 @@ const Description = () => {
 
       <p>
         <strong>You are here because</strong> you received a card. Did it
-        resonate with you? Did it remind you of something?
+        make you smile? Did it remind you of something?
       </p>
 
       <p>
@@ -83,25 +83,25 @@ const DescriptionDE = () => {
   return (
     <div className='card__content'>
       <p>
-        <strong>Das Zeil</strong> des Projektes ist es, zu erforschen,
+        <strong>Das Ziel</strong> des Projektes ist zu erforschen,
         was <em>wir</em> gemeinsam mit <em>Fremden</em> auf der Straße
         haben.
       </p>
 
       <p>
-        <strong>Sie sind hier weil</strong> Sie eine Karte erhalten haben.
-        Ist es mit dir in Resonanz? Hat er dich an etwas erinnert?
+        <strong>Du bist hier weil</strong> weil du eine Karte erhalten hast.
+        Strahlt das für dich was aus? Hat es dich an etwas erinnert?
       </p>
 
       <p>
-        <strong>Hier können Sie </strong>seine Story&nbsp;
-        <a href='#share'>teilen</a> und die Stories von anderen
-        Leuten <a href='#read'>lesen</a>.
+        <strong>Hier kannst du </strong>deine Geschichte&nbsp;
+        <a href='#share'>teilen</a> und die Geschichten
+        von anderen Leute <a href='#read'>lesen</a>.
       </p>
 
       <p>
-        Und <strong>über diese Karte</strong>, bitte, gebe es an den
-        nächsten Fremden weiter.
+        Bitte gib <strong>diese Karte</strong> an den nächsten Fremden
+        weiter.
       </p>
     </div>
   );
