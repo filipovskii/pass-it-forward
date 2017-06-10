@@ -21,12 +21,24 @@ const ADJ = [
   'Pleasant',
   'Stylish'
 ];
+
 const NOUN = [
   'Stranger',
   'Passerby',
   'Wanderer',
   'Walker'
 ];
+
+
+const EMPTY_STORY_LIST_TEXT = {
+  'en': 'You are the first one. Why are you here?',
+  'de': 'Du bist der erste. Warum bist du hier?'
+};
+
+const PLACEHOLDER = {
+  'en': 'Write my story…',
+  'de': 'Meine Story schreiben…'
+};
 
 const selectName = () => {
   const adjIndex = Math.round(Math.random() * (ADJ.length - 1));
@@ -110,7 +122,7 @@ const Story = ({story}) => {
 };
 
 
-const StoryList = ({stories}) => {
+const StoryList = ({stories, lang}) => {
   const keys = Object.keys(stories);
   const items = keys.map((key) => {
     const story = stories[key];
@@ -121,11 +133,11 @@ const StoryList = ({stories}) => {
     );
   });
 
+  const text = EMPTY_STORY_LIST_TEXT[lang];
+
   if (!keys.length) {
     return (
-      <p className='storyList_empty'>
-        You are the first one. Why are you here?
-      </p>
+      <p className='storyList_empty'>{text}</p>
     );
   }
 
@@ -288,6 +300,29 @@ class Card extends React.Component {
           <CardHeader>
             <CardHeaderLogo />
           </CardHeader>
+          <div className='card__loading'>
+            <svg
+              x='0px'
+              y='0px'
+              width='40px'
+              height='40px'
+              viewBox='0 0 50 50'
+              style={{'enableBackground': 'new 0 0 50 50'}}>
+
+              <path
+                fill='#000'
+                d='M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z'>
+                <animateTransform attributeType='xml'
+                attributeName='transform'
+                type='rotate'
+                from='0 25 25'
+                to='360 25 25'
+                dur='0.6s'
+                repeatCount='indefinite'/>
+              </path>
+
+            </svg>
+          </div>
         </Page>
       );
     }
@@ -322,7 +357,8 @@ class Card extends React.Component {
       btnDisabled = true;
     }
 
-    const isEng = this.state.lang === 'en';
+    const {lang} = this.state;
+    const isEng = lang === 'en';
 
     let engItemClasses = 'lang__item';
     let gerItemClasses = 'lang__item';
@@ -342,7 +378,7 @@ class Card extends React.Component {
         <CardHeader>
           <CardHeaderLogo />
           <pre className='card__header__text'>
-            {this.state.card[this.state.lang]}
+            {this.state.card[lang]}
           </pre>
           <div className='lang'>
             <button onClick={this._setEng} className={engItemClasses}>
@@ -357,13 +393,13 @@ class Card extends React.Component {
         {description}
 
         <h1 id='read' className='card__heading'>Stories</h1>
-        <StoryList stories={this.state.stories} />
+        <StoryList stories={this.state.stories} lang={lang} />
 
         <form onSubmit={this._sendStory} className='storyForm'>
           <span className='storyForm__error'>{errorText}</span>
           <TextArea
             id='share'
-            placeholder='Write my story…'
+            placeholder={PLACEHOLDER[lang]}
             value={this.state.value}
             onChange={this._onChange}
             className='storyForm__textfield'>

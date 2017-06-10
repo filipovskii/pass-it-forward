@@ -17,39 +17,15 @@
 }
 
 
-.card__aside {
-  flex: 1;
-  display: none;
-  font-size: 1.75em;
-  font-style: italic;
+.card__loading {
+  display: flex;
+  padding: 20px;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
 }
 
-
-.card__aside__text {
-  opacity: 0;
-  color: #333;
-  transition: opacitiy 1s ease-out;
-}
-
-
-@media (min-width: 500px) {
-  .card__aside {
-    display: flex;
-  }
-
-
-  .card__main {
-    flex-grow: 0;
-  }
-}
-
-
-@media (min-width: 700px) {
-  .card__aside__text {
-    opacity: 1;
-  }
+.card__loading path {
+  fill: #FF6174;
 }
 
 
