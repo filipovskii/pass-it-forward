@@ -13,6 +13,27 @@ import 'firebase/auth';
 import 'firebase/database';
 
 
+const ADJ = [
+  'Pretty',
+  'Good-looking',
+  'Charming',
+  'Handsome',
+  'Pleasant',
+  'Stylish'
+];
+const NOUN = [
+  'Stranger',
+  'Passerby',
+  'Wanderer',
+  'Walker'
+];
+
+const selectName = () => {
+  const adjIndex = Math.round(Math.random() * (ADJ.length - 1));
+  const nounIndex = Math.round(Math.random() * (NOUN.length - 1));
+  return `${ADJ[adjIndex]} ${NOUN[nounIndex]}`;
+};
+
 const backend =  firebase.initializeApp(config);
 const MAX_STORY_LENGTH = 2400;
 
@@ -153,6 +174,11 @@ class Card extends React.Component {
         return;
       }
 
+
+      if (body.length < 1) {
+        return;
+      }
+
       const key = backend.database().ref().child('stories').push().key;
       const user = backend.auth().currentUser;
 
@@ -160,7 +186,7 @@ class Card extends React.Component {
       let usernameUpdate = {};
 
       if (!username) {
-        username = 'Pretty Passerby';
+        username = selectName();
         usernameUpdate[`users/${user.uid}`] = { username };
       }
 
@@ -169,14 +195,17 @@ class Card extends React.Component {
         [`cards/${cardSlug}/stories/${key}`]: {
           body: body,
           uid: user.uid,
-          username: username,
+          username,
           cardSlug
         },
         ...usernameUpdate
       };
 
       backend.database().ref().update(updates);
-      this.setState({value: ''});
+      this.setState({
+        value: '',
+        username
+      });
     };
 
     this._setStories = (stories) => {
