@@ -32,7 +32,7 @@ const NOUN = [
 
 const EMPTY_STORY_LIST_TEXT = {
   'en': 'You are the first one. Why are you here?',
-  'de': 'Du bist der erste. Warum bist du hier?'
+  'de': 'Sie sind der erste. Warum sind Sie hier?'
 };
 
 const PLACEHOLDER = {
