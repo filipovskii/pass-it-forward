@@ -1,32 +1,3 @@
-@font-face {
-  font-family: 'Liberation Sans';
-  src: url('./fonts/LiberationSans-Regular.ttf');
-}
-
-@font-face {
-  font-family: 'Liberation Sans';
-  src: url('./fonts/LiberationSans-Bold.ttf');
-  font-weight: bold;
-}
-
-@font-face {
-  font-family: 'Liberation Serif';
-  src: url('./fonts/LiberationSerif-Regular.ttf');
-}
-
-@font-face {
-  font-family: 'Liberation Serif';
-  src: url('./fonts/LiberationSerif-Italic.ttf');
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Liberation Serif';
-  src: url('./fonts/LiberationSerif-Bold.ttf');
-  font-weight: bold;
-}
-
-
 *, *:before, *:after {
   box-sizing: border-box;
 }
