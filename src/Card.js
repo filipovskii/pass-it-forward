@@ -85,10 +85,18 @@ class Card extends React.Component {
 
   constructor() {
     super();
-    this.state = {value: '', stories: []};
+    this.state = {
+      value: '',
+      card: null,
+      loading: true,
+      stories: [],
+      username: null
+    };
+
     this._onChange = (e) => {
       this.setState({value: e.target.value});
     };
+    this._detach = [];
 
     this._sendStory = (e) => {
       e.preventDefault();
@@ -96,7 +104,7 @@ class Card extends React.Component {
       const key = backend.database().ref().child('stories').push().key;
       const user = backend.auth().currentUser;
 
-      let username = user.username;
+      let username = this.state.username;
       let usernameUpdate = {};
 
       if (!username) {
@@ -120,48 +128,109 @@ class Card extends React.Component {
     };
 
     this._setStories = (stories) => {
-      stories = stories.val() || [];
-      console.log('xxx stories', stories);
+      stories = stories || {};
       this.setState({stories});
+    };
+
+    this._setCard = (card) => {
+      let stories = {};
+
+      if (card && card.stories) {
+        stories = card.stories;
+      }
+
+      this.setState({
+        card: card,
+        loading: false,
+        stories
+      });
+    }
+
+    this._setUsername = (obj) => {
+      if (obj && obj.username) {
+        this.setState({username: obj.username});
+      }
     };
   }
 
   componentWillMount() {
     const auth = backend.auth();
-    auth.signInAnonymously().catch((error) => {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      console.log('xxx sign in error', error, errorCode, errorMessage);
-    });
+    auth
+      .signInAnonymously()
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log('xxx sign in error', error, errorCode, errorMessage);
+      })
+      .then((user) => {
+        console.log('xxx in sigh in', user);
+        return backend
+          .database()
+          .ref(`/users/${user.uid}`)
+          .once('value');
+      }).then((v) => this._setUsername(v.val()));
 
     const slug = this.props.match.params.cardSlug;
-    backend
-      .database()
-      .ref(`cards/${slug}/stories`)
-      .on('value', this._setStories);
+
+    this._detach.push(
+      backend
+        .database()
+        .ref(`cards/${slug}/stories`)
+        .on('value', (v) => this._setStories(v.val()))
+    );
+
+    this._detach.push(
+      backend
+        .database()
+        .ref(`/cards/${slug}`)
+        .once('value')
+        .then((v) => this._setCard(v.val()))
+    );
   }
 
 
   componentWillUnmount() {
-    backend.database().off();
+    this._detach.forEach(f => f());
   }
 
   render() {
+    const {card, loading} = this.state;
+
+
+    if (loading) {
+      return (
+        <Page>
+          <CardHeader>
+            <CardHeaderLogo />
+          </CardHeader>
+        </Page>
+      );
+    }
+
+
+    if (!card) {
+      return (
+      <Page>
+        <CardHeader>
+          <CardHeaderLogo />
+        </CardHeader>
+        <div className='card__content'>
+          <p><em>Nevermind..</em></p>
+        </div>
+      </Page>
+      );
+    }
+
     const iconOpacity = this.state.value ? 1 : 0;
     console.log(this.props);
     const user = backend.auth().currentUser;
     console.log('xxx user', user);
+    console.log('xxx state', this.state);
     return (
       <Page>
         <CardHeader>
           <CardHeaderLogo />
-
-          <div className='card__header__text'>
-            <p>I remember how I used to</p>
-            <p>enjoy the rain</p>
-            <p>in my hometown.</p>
-          </div>
-
+          <pre className='card__header__text'>{this.state.card.en}</pre>
         </CardHeader>
 
         <Description />
