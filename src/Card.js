@@ -266,13 +266,11 @@ class Card extends React.Component {
         })
     );
 
-    this._detach.push(
-      backend
-        .database()
-        .ref(`/cards/${slug}`)
-        .once('value')
-        .then((v) => this._setCard(v.val()))
-    );
+    backend
+      .database()
+      .ref(`/cards/${slug}`)
+      .once('value')
+      .then((v) => this._setCard(v.val()))
   }
 
 

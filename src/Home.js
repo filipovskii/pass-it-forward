@@ -7,10 +7,13 @@ const Description = () => {
   return (
     <div className='card__content'>
       <p>
-        <strong>The goal</strong> of the project is to explore
-        what <em>we</em> have in common with <em>strangers</em> on
-        the street.
+        Made by&nbsp;<em>Arkady Brot</em> for&nbsp;<em>Test</em>.
+        If you'd like to get in touch, send your thoughts and questions
+        to&nbsp;
+        <a href='mailto:filipovskii.off@gmail.com'>this email</a>.
       </p>
+
+      <p>Thank you for participating!</p>
     </div>
   );
 }
