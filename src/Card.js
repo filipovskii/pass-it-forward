@@ -14,6 +14,7 @@ import 'firebase/database';
 
 
 const backend =  firebase.initializeApp(config);
+const MAX_STORY_LENGTH = 2400;
 
 
 const Description = () => {
@@ -35,9 +36,43 @@ const Description = () => {
         <a href='#read'>read the stories</a> of strangers and&nbsp;
         <a href='#share'>share your story</a>.
       </p>
+
+      <p>
+        And <strong>about that card</strong>, please pass it on to the
+        next stranger.
+      </p>
     </div>
   );
-}
+};
+
+
+const DescriptionDE = () => {
+  return (
+    <div className='card__content'>
+      <p>
+        <strong>Das Zeil</strong> des Projektes ist es, zu erforschen,
+        was <em>wir</em> gemeinsam mit <em>Fremden</em> auf der Straße
+        haben.
+      </p>
+
+      <p>
+        <strong>Sie sind hier weil</strong> Sie eine Karte erhalten haben.
+        Ist es mit dir in Resonanz? Hat er dich an etwas erinnert?
+      </p>
+
+      <p>
+        <strong>Hier können Sie </strong>seine Story&nbsp;
+        <a href='#share'>teilen</a> und die Stories von anderen
+        Leuten <a href='#read'>lesen</a>.
+      </p>
+
+      <p>
+        Und <strong>über diese Karte</strong>, bitte, gebe es an den
+        nächsten Fremden weiter.
+      </p>
+    </div>
+  );
+};
 
 
 const Story = ({story}) => {
@@ -90,7 +125,8 @@ class Card extends React.Component {
       card: null,
       loading: true,
       stories: [],
-      username: null
+      username: null,
+      lang: localStorage.getItem('user/lang') || 'en'
     };
 
     this._onChange = (e) => {
@@ -98,9 +134,25 @@ class Card extends React.Component {
     };
     this._detach = [];
 
+    this._setGer = () => {
+      localStorage.setItem('user/lang', 'de');
+      this.setState({lang: 'de'});
+    }
+
+    this._setEng = () => {
+      localStorage.setItem('user/lang', 'en');
+      this.setState({lang: 'en'});
+    }
+
     this._sendStory = (e) => {
       e.preventDefault();
+
       const body = this.state.value;
+
+      if (body.length > MAX_STORY_LENGTH) {
+        return;
+      }
+
       const key = backend.database().ref().child('stories').push().key;
       const user = backend.auth().currentUser;
 
@@ -163,7 +215,6 @@ class Card extends React.Component {
         console.log('xxx sign in error', error, errorCode, errorMessage);
       })
       .then((user) => {
-        console.log('xxx in sigh in', user);
         return backend
           .database()
           .ref(`/users/${user.uid}`)
@@ -176,7 +227,14 @@ class Card extends React.Component {
       backend
         .database()
         .ref(`cards/${slug}/stories`)
-        .on('value', (v) => this._setStories(v.val()))
+        .on('value', (v) => {
+          if (v) {
+            this._setStories(v.val());
+            return;
+          }
+
+          this._setStories({});
+        })
     );
 
     this._detach.push(
@@ -221,24 +279,61 @@ class Card extends React.Component {
       );
     }
 
-    const iconOpacity = this.state.value ? 1 : 0;
-    console.log(this.props);
-    const user = backend.auth().currentUser;
-    console.log('xxx user', user);
-    console.log('xxx state', this.state);
+    const {value} = this.state;
+
+    const errorText = (
+      value.length > MAX_STORY_LENGTH ?
+      'Sorry, the text is too long.' :
+      null
+    );
+
+    let btnOpacity = 1;
+    let btnDisabled = false;
+
+    if (!value || errorText) {
+      btnOpacity = 0;
+      btnDisabled = true;
+    }
+
+    const isEng = this.state.lang === 'en';
+
+    let engItemClasses = 'lang__item';
+    let gerItemClasses = 'lang__item';
+
+    if (isEng) {
+      engItemClasses += ' lang__item_active';
+    } else {
+      gerItemClasses += ' lang__item_active';
+    }
+
+    let description = (
+      isEng ? <Description /> : <DescriptionDE />
+    );
+
     return (
       <Page>
         <CardHeader>
           <CardHeaderLogo />
-          <pre className='card__header__text'>{this.state.card.en}</pre>
+          <pre className='card__header__text'>
+            {this.state.card[this.state.lang]}
+          </pre>
+          <div className='lang'>
+            <button onClick={this._setEng} className={engItemClasses}>
+              en
+            </button>
+            <button onClick={this._setGer} className={gerItemClasses}>
+              de
+            </button>
+          </div>
         </CardHeader>
 
-        <Description />
+        {description}
 
         <h1 id='read' className='card__heading'>Stories</h1>
         <StoryList stories={this.state.stories} />
 
         <form onSubmit={this._sendStory} className='storyForm'>
+          <span className='storyForm__error'>{errorText}</span>
           <TextArea
             id='share'
             placeholder='Write my story…'
@@ -249,14 +344,14 @@ class Card extends React.Component {
 
           <button
             className='storyForm__submit'
-            style={{opacity: iconOpacity}}
+            style={{opacity: btnOpacity}}
+            disabled={btnDisabled}
             type='submit'>
 
             <img
               alt='Send story'
               className='storyForm__icon'
               src={sendIcon} />
-
           </button>
         </form>
       </Page>
