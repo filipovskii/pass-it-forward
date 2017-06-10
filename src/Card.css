@@ -1,16 +1,19 @@
 .card {
-  display: flex;
   font-family: 'Liberation Serif', serif;
   min-height: 100%;
   min-width: 100%;
-  flex-direction: row;
+  background-color: #C9C9C9;
 }
 
 
 .card__main {
   background-color: #F7F7F7;
   color: #333;
-  flex: 1 1 450px;
+  display: block;
+  max-width: 450px;
+  margin: auto;
+  box-shadow: 0px 0px 6px 0px rgba(51, 51, 51, 0.5);
+  z-index: 1;
 }
 
 
@@ -21,13 +24,17 @@
   font-style: italic;
   align-items: center;
   justify-content: center;
-  background-color: white;
-  border-left: 1px solid #979797;
-  z-index: 1;
 }
 
 
-@media (min-width: 670px) {
+.card__aside__text {
+  opacity: 0;
+  color: #333;
+  transition: opacitiy 1s ease-out;
+}
+
+
+@media (min-width: 500px) {
   .card__aside {
     display: flex;
   }
@@ -35,6 +42,13 @@
 
   .card__main {
     flex-grow: 0;
+  }
+}
+
+
+@media (min-width: 700px) {
+  .card__aside__text {
+    opacity: 1;
   }
 }
 
@@ -79,4 +93,100 @@
 
 .card__content a {
   color: #FF6174;
+}
+
+
+.card__heading {
+  font-family: 'Liberation Sans', sans-serif;
+  margin: 60px 0;
+  font-size: 2em;
+  letter-spacing: 0.01em;
+  padding: 0 15px;
+}
+
+
+.story {
+  margin: 0;
+  padding: 0 15px;
+}
+
+
+.story__text {
+  border-left: 3px solid #FF6174;
+  font-size: 1.5em;
+  line-height: 1.335em;
+  font-weight: 400;
+  padding-left: 20px;
+}
+
+
+.story__footer {
+  font-size: 1.1em;
+  font-style: italic;
+  margin-top: 12px;
+  color: #777777;
+}
+
+
+.storyList {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+
+.storyList_empty {
+  padding-left: 15px;
+  padding-right: 15px;
+  font-size: 1.1em;
+  font-style: italic;
+  color: #777777;
+  margin-top: -40px;
+}
+
+
+.storyList__item {
+  margin-top: 40px;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+}
+
+
+.storyForm {
+  position: relative;
+}
+
+
+.storyForm__submit {
+  position: absolute;
+  bottom: 60px;
+  right: 0;
+  appearance: none;
+  background: none;
+  border: none;
+  transition: opacity 0.3s ease-out;
+}
+
+.storyForm__textfield {
+  width: 100%;
+  appearance: none;
+  font-family: 'Liberation Serif', serif;
+  color: #333;
+  font-size: 1.5em;
+  line-height: 1.335em;
+  font-weight: 400;
+  padding: 15px;
+  padding-right: 35px;
+  border: none;
+  border-top: 1px solid #777777;
+  border-bottom: 1px solid #777777;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  resize: none;
+}
+
+.storyForm__icon {
+  width: 20px;
+  height: 20px;
 }
